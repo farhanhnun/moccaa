@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0a;
+    color: #f0ebe0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  .page { max-width: 700px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid #f0a03a44;
+    background: #f0a03a11;
+    color: #f0a03a;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
+    padding: 6px 14px; border-radius: 100px;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #f0a03a; animation: pulse 1.5s ease-in-out infinite; }
+
+  .hero { margin-top: 2rem; animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-label { font-size: 14px; color: #888; margin-bottom: 0.5rem; }
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 6.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: #f0ebe0;
+  }
+  .hero-name span { color: #f0a03a; }
+
+  .tagline {
+    margin-top: 1.5rem;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: #b0a898;
+    max-width: 480px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .tagline strong { color: #f0ebe0; font-weight: 500; }
+
+  .divider {
+    margin: 2.5rem 0;
+    height: 1px;
+    background: linear-gradient(90deg, #f0a03a44, transparent);
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    animation: fadeUp 0.6s 0.35s ease both;
+  }
+  .card {
+    background: #141414;
+    border: 1px solid #ffffff0f;
+    border-radius: 16px;
+    padding: 1.4rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: #f0a03a33; transform: translateY(-2px); }
+  .card-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+  .card-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #f0ebe0; }
+  .card-desc { font-size: 13px; color: #888; line-height: 1.6; }
+  .card.wide { grid-column: span 2; background: #f0a03a0a; border-color: #f0a03a22; }
+  .card.wide .card-title { color: #f0a03a; font-size: 17px; }
+  .card.wide .card-desc { color: #c0a878; font-size: 14px; }
+
+  .quote-section {
+    margin-top: 2rem;
+    animation: fadeUp 0.6s 0.45s ease both;
+  }
+  .quote {
+    background: #141414;
+    border-left: 3px solid #f0a03a;
+    padding: 1.2rem 1.5rem;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .quote:hover { background: #1a1a1a; }
+  .quote p { font-size: 14px; color: #c0b8aa; line-height: 1.7; }
+  .quote p em { font-style: italic; color: #f0ebe0; }
+  .quote-attr { font-size: 12px; color: #666; margin-top: 6px; }
+
+  .footer {
+    margin-top: 3rem;
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeUp 0.6s 0.55s ease both;
+  }
+  .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #f0a03a22; border: 1.5px solid #f0a03a55;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+    color: #f0a03a;
+    flex-shrink: 0;
+  }
+  .footer-text { font-size: 13px; color: #777; line-height: 1.6; }
+  .footer-text strong { color: #f0ebe0; }
+
+  .cta {
+    margin-top: 2.5rem;
+    animation: fadeUp 0.6s 0.6s ease both;
+  }
+  .btn {
+    display: inline-block;
+    background: #f0a03a;
+    color: #0a0a0a;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 100px;
+    border: none; cursor: pointer;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .btn:hover { background: #f5b55a; transform: scale(1.03); }
+  .btn:active { transform: scale(0.98); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="page">
+
+  <div class="badge"><div class="dot"></div> Pesan Semangat Hari Ini</div>
+
+  <div class="hero">
+    <p class="hero-label">Untuk sahabat kita yang luar biasa,</p>
+    <h1 class="hero-name">Russell<span>.</span></h1>
+  </div>
+
+  <p class="tagline">
+    Setiap langkah yang lo lakuin hari ini adalah bagian dari <strong>sesuatu yang lebih besar.</strong> Tetap jalan, bro.
+  </p>
+
+  <div class="divider"></div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🔥</div>
+      <div class="card-title">Konsistensi</div>
+      <div class="card-desc">Bukan yang paling keras yang menang, tapi yang paling konsisten. Lo sudah di jalur yang benar.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💪</div>
+      <div class="card-title">Kekuatan</div>
+      <div class="card-desc">Setiap tantangan yang lo hadapi membuktikan betapa kuatnya lo. Jangan underestimate diri sendiri.</div>
+    </div>
+    <div class="card wide">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Ingat kenapa lo mulai</div>
+      <div class="card-desc">Di saat lelah, ingat tujuan awal lo. Progres kecil setiap hari akan jadi pencapaian besar. Ayo terus gaspol, Russel!</div>
+    </div>
+  </div>
+
+  <div class="quote-section">
+    <div class="quote">
+      <p><em>"Kerja keras tidak pernah berbohong. Setiap tetes keringat adalah investasi untuk masa depan lo."</em></p>
+      <p class="quote-attr">— Prinsip yang sudah terbukti</p>
+    </div>
+    <div class="quote">
+      <p><em>"Hari yang berat adalah tanda bahwa lo sedang tumbuh. Orang biasa berhenti — lo bukan orang biasa."</em></p>
+      <p class="quote-attr">— Buat Russel, yang selalu all out</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="avatar">R</div>
+    <div class="footer-text">
+      <strong>Russel</strong> — terus semangat, bro! 🤜🤛<br>
+      Tim lo ada di belakang lo, selalu.
+    </div>
+  </div>
+
+  <div class="cta">
+    <button class="btn" onclick="sendPrompt('Buatkan versi baru halaman semangat untuk Russel dengan tema yang berbeda!')">Refresh Semangat ↗</button>
+  </div>
+
+</div>
+</body>
+</html>
